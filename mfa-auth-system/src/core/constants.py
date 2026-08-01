@@ -33,3 +33,7 @@ EVENT_PIN_VERIFIED = "pin_verified"
 EVENT_PIN_EXPIRED = "pin_expired"
 EVENT_PIN_FAILED = "pin_failed"
 EVENT_PIN_BLOCKED = "pin_blocked"
+EVENT_AUTH_FAILED = "auth_failed"  # Generic auth failure
+
+# Security constants
+MIN_SECRET_KEY_LENGTH = 32
