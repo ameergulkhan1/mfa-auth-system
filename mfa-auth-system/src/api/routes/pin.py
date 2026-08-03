@@ -3,7 +3,7 @@ PIN verification routes - SECURITY HARDENED
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional
 import jwt
 from datetime import datetime, timedelta
@@ -32,8 +32,9 @@ class VerifyPinRequest(BaseModel):
     pin: str = Field(..., min_length=6, max_length=6, description="6-digit PIN")
     ip_address: Optional[str] = Field(None, description="Client IP for audit")
     
-    @validator('pin')
-    def validate_pin_format(cls, v):
+    @field_validator('pin')
+    @classmethod
+    def validate_pin_format(cls, v: str) -> str:
         if not validate_pin(v):
             raise ValueError('PIN must be exactly 6 digits')
         return v

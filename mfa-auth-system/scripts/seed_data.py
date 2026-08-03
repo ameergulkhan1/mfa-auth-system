@@ -9,7 +9,8 @@ from datetime import datetime
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.db.session import SessionLocal, init_db
+from sqlalchemy import text
+from src.db.session import SessionLocal, init_db, engine
 from src.models.user import User
 from src.models.pin_attempt import PinAttempt
 from src.models.audit_log import AuditLog

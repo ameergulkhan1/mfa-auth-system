@@ -1,5 +1,5 @@
 ﻿"""
-Database initialization script
+Database initialization script - Fixed version
 """
 import sys
 import os
@@ -7,8 +7,11 @@ import os
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.db.session import init_db, engine
-from src.models.user import Base
+from sqlalchemy import text
+from src.db.session import engine, Base
+from src.models.user import User
+from src.models.pin_attempt import PinAttempt
+from src.models.audit_log import AuditLog
 from src.core.config import settings
 from src.utils.logger import setup_logging
 import logging
@@ -28,22 +31,22 @@ def setup_database():
     
     try:
         # Create tables
-        init_db()
+        Base.metadata.create_all(bind=engine)
         print("✅ Database tables created successfully")
         
         # Verify connection
         with engine.connect() as conn:
-            result = conn.execute("SELECT 1")
+            conn.execute(text("SELECT 1"))
             print("✅ Database connection verified")
         
         # Show tables
         with engine.connect() as conn:
             tables = conn.execute(
-                "SELECT table_name FROM information_schema.tables "
-                "WHERE table_schema = 'public'"
+                text("SELECT table_name FROM information_schema.tables "
+                     "WHERE table_schema = 'public'")
             )
             table_names = [row[0] for row in tables]
-            print(f"\n📊 Tables created: {', '.join(table_names)}")
+            print(f"\n📊 Tables created: {', '.join(table_names) if table_names else 'No tables found!'}")
         
         print()
         print("=" * 60)
@@ -53,6 +56,8 @@ def setup_database():
     except Exception as e:
         print(f"❌ Database setup failed: {e}")
         logger.error(f"Database setup failed: {e}")
+        import traceback
+        traceback.print_exc()
         sys.exit(1)
 
 
