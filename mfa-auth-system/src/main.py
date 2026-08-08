@@ -10,7 +10,7 @@ import os
 
 from src.core.config import settings
 from src.db.session import init_db
-from src.api.routes import auth, pin, health
+from src.api.routes import auth, pin, health, totp  # ADDED: totp
 from src.services.cleanup_service import CleanupService
 from src.utils.logger import setup_logging
 
@@ -94,6 +94,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(pin.router)
 app.include_router(health.router)
+app.include_router(totp.router)  # ADDED: TOTP router
 
 
 @app.get("/")
@@ -103,6 +104,7 @@ async def root():
         "message": "MFA Authentication System",
         "version": "1.0.0",
         "environment": settings.environment,
+        "features": ["sms_pin", "totp_qr"],  # ADDED: TOTP feature
         "docs": "/docs" if settings.environment != "production" else None,
         "health": "/health"
     }
@@ -114,7 +116,8 @@ async def version():
     return {
         "version": "1.0.0",
         "environment": settings.environment,
-        "python_version": "3.11+"
+        "python_version": "3.11+",
+        "features": ["sms_pin", "totp_qr"]  # ADDED
     }
 
 
