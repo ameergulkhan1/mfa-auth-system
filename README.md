@@ -21,7 +21,3 @@ A full-stack Multi-Factor Authentication (MFA) system built with FastAPI, React,
 ## Project Goals
 
 Demonstrate practical authentication security, verification workflows, account protection, and authentication monitoring.
-
-## Project Status
-
-[Add current status: Prototype, In Development, or Completed.]
